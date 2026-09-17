@@ -293,6 +293,12 @@ async def report(format: str = "json") -> ReportResponse:
 async def health() -> dict[str, str]:
     return {"status": "ok"}
 
+@router.get("/")
+async def root():
+    return {
+        "status": "running",
+        "app": "JobHunter AI"
+    }
 
 def create_app() -> FastAPI:
     configure_logging(get_settings().log_level)
