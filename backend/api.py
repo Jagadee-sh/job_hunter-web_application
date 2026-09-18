@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.config import get_settings
@@ -293,7 +294,7 @@ async def report(format: str = "json") -> ReportResponse:
 async def health() -> dict[str, str]:
     return {"status": "ok"}
 
-@router.get("/")
+@router.get("/api")
 async def root():
     return {
         "status": "running",
@@ -309,6 +310,12 @@ def create_app() -> FastAPI:
 
     application = FastAPI(title="JobHunter AI", version="0.1.0", lifespan=lifespan)
     application.include_router(router)
+    
+    # Serve frontend static files
+    frontend_dist = Path("frontend/dist")
+    if frontend_dist.exists():
+        application.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
+    
     return application
 
 

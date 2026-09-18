@@ -1,10 +1,25 @@
-<<<<<<< HEAD
 # JobHunter AI
 
 JobHunter AI is an async Python platform for discovering, scoring, tailoring, preparing, and tracking job applications with explicit human approval before submission.
 
 ## Quick start
 
+### Option 1: Automated Start (Recommended)
+
+**Windows:**
+```powershell
+start.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+### Option 2: Manual Start
+
+**Backend:**
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -12,17 +27,53 @@ pip install -e ".[dev]"
 uvicorn backend.main:app --port 8000 --loop asyncio
 ```
 
-The development backend uses a local SQLite database by default. On first startup it creates `jobhunter.db` and seeds three demo roles, so the app is immediately usable without PostgreSQL, Redis, or an AI key. The API exposes OpenAPI documentation at `http://127.0.0.1:8000/docs` and a health check at `http://127.0.0.1:8000/health`.
-
-Run the dashboard in a second terminal:
-
+**Frontend (in a second terminal):**
 ```powershell
 cd frontend
 npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The dashboard's Search jobs action calls the backend and displays the seeded roles. To use PostgreSQL instead, set `DATABASE_URL` to a PostgreSQL async URL before starting the API.
+The development backend uses a local SQLite database by default. On first startup it creates `jobhunter.db` and seeds three demo roles, so the app is immediately usable without PostgreSQL, Redis, or an AI key. The API exposes OpenAPI documentation at `http://127.0.0.1:8000/docs` and a health check at `http://127.0.0.1:8000/health`.
+
+Open `http://127.0.0.1:5173` for the development frontend, or `http://127.0.0.1:8000` for the production build (frontend served by backend).
+
+## Environment Configuration
+
+Copy `.env.example` to `.env` and configure your settings:
+
+```bash
+cp .env.example .env
+```
+
+Required environment variables:
+- `OPENAI_API_KEY`: Your OpenAI API key for AI features
+- `DATABASE_URL`: Database connection string (default: SQLite)
+
+## Production Deployment
+
+### Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t jobhunter-ai .
+docker run -p 8000:8000 --env-file .env jobhunter-ai
+```
+
+### Render Deployment
+
+1. Push your code to GitHub
+2. Create a new web service on Render
+3. Connect your GitHub repository
+4. Render will automatically detect the `render.yaml` configuration
+5. Set your `OPENAI_API_KEY` in the Render environment variables
+6. Deploy!
+
+The `render.yaml` file is pre-configured for automatic deployment with:
+- Docker runtime
+- SQLite database (upgrade to PostgreSQL for production)
+- Automatic environment variable configuration
 
 ## Naukri automation
 
@@ -41,6 +92,3 @@ Applications require an explicit approval request through `POST /integrations/na
 - `backend/automation/`: Playwright browser adapters
 - `backend/resume/`: truthful DOCX/PDF tailoring
 - `frontend/`: React dashboard
-=======
-# job_hunter-web_application
->>>>>>> 9df26f2fb2db1de9933db519bf0999156f370588

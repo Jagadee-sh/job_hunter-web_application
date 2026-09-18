@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: jobhunter-ai
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./jobhunter.db
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PORT
+        value: "8000"
+    region: oregon
